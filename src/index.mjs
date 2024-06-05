@@ -3,6 +3,11 @@ dotenv.config();
 // Imports
 import express from "express";
 import dotenv from "dotenv";
+import { query, validationResult, body, matchedData } from "express-validator";
+import {
+  createUserValidation,
+  filteredUserValidation,
+} from "./validatorRules/user.rules.mjs";
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,17 +23,35 @@ const users = [
 const app = express();
 app.use(express.json()); // to parse incoming JSON format in http requests
 
-app.get("/api/users", (req, res) => {
-  console.log(req.query);
-  // Destructure query
-  const {
-    query: { filter, value },
-  } = req;
+// Middleware
+const loggingMiddleware = (req, res, next) => {
+  console.log(`Middleware: ${req.method} - ${req.url}`);
+  next();
+};
 
-  if (filter && value) {
-    const filteredUser = users.filter((user) => user[filter].includes(value));
+app.get("/api/users", filteredUserValidation, (req, res) => {
+  const errors = validationResult(req);
 
-    return res.status(200).send(filteredUser);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const data = matchedData(req);
+
+  if (data.filter && data.value) {
+    // Normalize the search value by trimming whitespace and converting to lowercase
+    const searchValue = data.value.trim().toLowerCase();
+
+    // Filter the users array based on the filter criteria
+    const filteredUsers = users.filter(
+      (user) =>
+        // Ensure the property exists on the user object and perform a case-insensitive search on its value.
+        // Guard against potential runtime errors and null values by first checking if the property exists (user[data.filter]).
+        // This prevents attempting to call string methods on undefined or null values, which would result in runtime errors.
+        user[data.filter] &&
+        user[data.filter].toLowerCase().includes(searchValue)
+    );
+
+    return res.status(200).send(filteredUsers);
   }
 
   return res.status(201).send(users);
@@ -55,17 +78,19 @@ app.get("/api/users/:id", (req, res) => {
 });
 
 // Post
-app.post("/api/users", (req, res) => {
-  console.log("logging post request: ", req.body);
-  const {
-    body: { username, lastname },
-  } = req;
+app.post("/api/users", createUserValidation, (req, res) => {
+  // express-validator validation
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const data = matchedData(req);
 
   const newUser = {
     // - 1 to remove the 0 index
     id: users[users.length - 1].id + 1,
-    username: username,
-    lastname: lastname,
+    ...data,
   };
 
   users.push(newUser);
@@ -74,7 +99,6 @@ app.post("/api/users", (req, res) => {
 });
 
 // Put
-
 app.put("/api/users/:id", (req, res) => {
   const {
     body,
