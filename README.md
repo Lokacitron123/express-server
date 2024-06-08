@@ -1,6 +1,6 @@
 # Express Server with MongoDB
 
-_Insert a brief description of your project here._
+A simple REST API using popular tools from the Express framework and ecosystem.
 
 ## Goal Of Project
 
@@ -41,5 +41,3 @@ The goal of this project has been to create a CRUD REST API with queried request
    ```
 6. **Access the server:**
    - Open your browser and go to `http://localhost:your_port_number`
-
-_Feel free to add any additional steps or information relevant to running your project._
