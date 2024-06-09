@@ -3,8 +3,10 @@ import { Router } from "express";
 import {
   createUserValidationSchema,
   filteredUserValidationSchema,
+  updateProfileValidationSchema,
 } from "../validatorSchemas/user.validation.mjs";
 import { checkSchema } from "express-validator";
+import ensureAuthenticated from "../middleware/authMiddleware.mjs";
 
 import {
   createUser,
@@ -13,10 +15,11 @@ import {
   getSingleUser,
   patchUser,
   putUser,
+  putUserProfile,
 } from "../controllers/users.controller.mjs";
 
 const router = Router();
-
+// Get
 // All users
 router.get(
   "/api/users",
@@ -27,16 +30,25 @@ router.get(
 // Single user
 router.get("/api/users/:id", getSingleUser);
 
+// Post
 // Create user
 router.post("/api/users", checkSchema(createUserValidationSchema), createUser);
 
-// Update user
 // Put
+// Update user
 router.put("/api/users/:id", putUser);
+// Update profile
+router.put(
+  "/api/users/profile/:id",
+  ensureAuthenticated,
+  checkSchema(updateProfileValidationSchema),
+  putUserProfile
+);
 
 // Patch
 router.patch("/api/users/:id", patchUser);
 
+// Delete
 // Delete user
 router.delete("/api/users/:id", deleteUser);
 

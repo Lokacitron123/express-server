@@ -6,6 +6,7 @@ import {
   loginAuth,
   logoutAuth,
 } from "../controllers/auth.controller.mjs";
+import ensureAuthenticated from "../middleware/authMiddleware.mjs";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ const router = Router();
 // pass those instead of local to passport.authenticate()
 router.post("/api/auth", passport.authenticate("local"), loginAuth);
 
-router.get("/api/auth/status", authStatus);
+router.get("/api/auth/status", ensureAuthenticated, authStatus);
 
 router.post("/api/auth/logout", logoutAuth);
 

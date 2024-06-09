@@ -1,5 +1,3 @@
-import { body, query } from "express-validator";
-
 export const createUserValidationSchema = {
   username: {
     isLength: {
@@ -47,6 +45,37 @@ export const createUserValidationSchema = {
     isString: {
       errorMessage: "Password must be a string",
     },
+  },
+};
+
+export const updateProfileValidationSchema = {
+  bio: {
+    optional: { options: { nullable: true } },
+    isString: { errorMessage: "Bio must be a string" },
+    isLength: {
+      options: { max: 500 },
+      errorMessage: "Bio cannot exceed 500 characters",
+    },
+  },
+  avatar: {
+    optional: { options: { nullable: true } },
+    isString: { errorMessage: "Avatar must be a string" },
+  },
+  "social.twitter": {
+    optional: { options: { nullable: true } },
+    isURL: { errorMessage: "Twitter URL is not valid" },
+  },
+  "social.linkedin": {
+    optional: { options: { nullable: true } },
+    isURL: { errorMessage: "LinkedIn URL is not valid" },
+  },
+  "social.website": {
+    optional: { options: { nullable: true } },
+    isURL: { errorMessage: "Website URL is not valid" },
+  },
+  location: {
+    optional: { options: { nullable: true } },
+    isString: { errorMessage: "Location must be a string" },
   },
 };
 

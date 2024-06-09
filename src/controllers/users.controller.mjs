@@ -39,8 +39,8 @@ export const getAllUsers = async (req, res) => {
 };
 
 // get Single user
-export const getSingleUser = (req, res) => {
-  const id = parseInt(req.params.id, 10);
+export const getSingleUser = async (req, res) => {
+  const id = req.params.id;
 
   if (!id) {
     return res
@@ -48,7 +48,7 @@ export const getSingleUser = (req, res) => {
       .send({ message: "Invalid Request. No id was provided" });
   }
 
-  const reqUser = users.find((user) => user.id === id);
+  const reqUser = await User.findById(id).populate("profile");
 
   if (!reqUser) {
     // Send a 404 status if the user is not found
@@ -112,6 +112,46 @@ export const putUser = (req, res) => {
   return res
     .status(200)
     .send({ message: "User successfully updated", user: users[userIndex] });
+};
+
+// Create/Update user profile
+export const putUserProfile = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  // matchedData returns an object from the validated request
+  const data = matchedData(req);
+
+  console.log("Logging data", data);
+
+  const newProfile = {
+    ...data,
+  };
+
+  const userId = req.params.id;
+
+  try {
+    // Update the user profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profile: newProfile },
+      { new: true, runValidators: true }
+    ).populate("profile");
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Send the updated user profile as the response
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the profile" });
+  }
 };
 
 // patch
