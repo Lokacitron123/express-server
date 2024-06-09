@@ -1,4 +1,4 @@
-# Express Server with MongoDB
+# Express Server with MongoDB - Blog Project
 
 A simple REST API using popular tools from the Express framework and ecosystem.
 
@@ -8,9 +8,9 @@ The goal of this project has been to create a CRUD REST API with queried request
 
 ## Tools Used
 
-- Node/Express
-- MongoDB/Mongoose
-- passport / express-session
+- node/express
+- mongodb/mongoose
+- passport / passport-local / express-session / eonnect-mongo
 - express-validator
 - cookie-parser
 

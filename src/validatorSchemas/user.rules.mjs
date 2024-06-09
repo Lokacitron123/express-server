@@ -8,7 +8,7 @@ export const createUserValidation = [
     .withMessage("Username must at least be between 5 and 32 characters long")
     .isString()
     .withMessage("Username must be a string"),
-  body("displayName")
+  body("email")
     .notEmpty()
     .withMessage("Lastname cannot be empty")
     .isLength({ min: 2, max: 18 })
@@ -29,7 +29,7 @@ export const filteredUserValidation = [
     .optional()
     .isString()
     .withMessage("Filter query must be a string")
-    .isLength({ min: 2, max: 18 })
+    .isLength({ min: 1, max: 18 })
     .withMessage("Query length must be between 3 and 10 characters"),
   query("value")
     .optional()

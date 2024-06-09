@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { matchedData, validationResult } from "express-validator";
+
 import {
-  createUserValidation,
-  filteredUserValidation,
-} from "../validatorRules/user.rules.mjs";
-import { users } from "../utils/mockUsers.mjs";
+  createUserValidationSchema,
+  filteredUserValidationSchema,
+} from "../validatorSchemas/user.validation.mjs";
+import { checkSchema } from "express-validator";
+
 import {
   createUser,
   deleteUser,
@@ -17,13 +18,17 @@ import {
 const router = Router();
 
 // All users
-router.get("/api/users", filteredUserValidation, getAllUsers);
+router.get(
+  "/api/users",
+  checkSchema(filteredUserValidationSchema),
+  getAllUsers
+);
 
 // Single user
 router.get("/api/users/:id", getSingleUser);
 
 // Create user
-router.post("/api/users", createUserValidation, createUser);
+router.post("/api/users", checkSchema(createUserValidationSchema), createUser);
 
 // Update user
 // Put

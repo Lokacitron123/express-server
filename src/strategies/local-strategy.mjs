@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import { users } from "../utils/mockUsers.mjs";
 import { User } from "../schemas/users.schema.mjs";
+import { comparePassword } from "../utils/helpers.mjs";
 
 // Responsible for taking the validated user and storing into session
 passport.serializeUser((user, done) => {
@@ -43,13 +43,16 @@ export default passport.use(
         throw new Error("User not found");
       }
 
-      if (findUser.password !== password) {
+      // ComparePassword returns true or false
+      const passwordCheck = comparePassword(password, findUser.password);
+
+      if (!passwordCheck) {
         throw new Error("Invalid Credentials");
       }
 
       done(null, findUser);
     } catch (error) {
-      done(err, null);
+      done(error, null);
     }
   })
 );

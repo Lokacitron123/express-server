@@ -1,6 +1,7 @@
 import { matchedData, validationResult } from "express-validator";
 import { users } from "../utils/mockUsers.mjs";
 import { User } from "../schemas/users.schema.mjs";
+import { hashPassword } from "../utils/helpers.mjs";
 
 // get all users
 export const getAllUsers = async (req, res) => {
@@ -68,7 +69,8 @@ export const createUser = async (req, res) => {
   }
   const data = matchedData(req);
 
-  const hashedPassword = bcrypt;
+  // Set password in data to new hashedPassword
+  data.password = await hashPassword(data.password);
 
   const newUser = await User.create({
     ...data,

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import passport from "passport";
-import { matchedData, validationResult } from "express-validator";
 import "../strategies/local-strategy.mjs";
 import {
   authStatus,

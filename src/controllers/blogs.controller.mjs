@@ -1,4 +1,4 @@
-export const getProducts = (req, res) => {
+export const getBlogs = (req, res) => {
   if (req.cookies.hello && req.cookies.hello === "world") {
     return res.status(200).send([{ id: 123, name: "Bananas", price: 19 }]);
   }
