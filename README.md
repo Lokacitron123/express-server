@@ -4,7 +4,7 @@ A simple REST API using popular tools from the Express framework and ecosystem.
 
 ## Goal Of Project
 
-The goal of this project has been to create a CRUD REST API with queried requests using Mongoose and to become more confident in the Express framework and ecosystem.
+The goal of this project has been to create a CRUD REST API using Mongoose and to become more confident in the Express framework and ecosystem.
 
 ## Tools Used
 
