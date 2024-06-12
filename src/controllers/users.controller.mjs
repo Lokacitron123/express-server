@@ -186,30 +186,27 @@ export const patchUser = (req, res) => {
 };
 
 // delete
-export const deleteUser = (req, res) => {
-  const {
-    params: { id },
-  } = req;
+export const deleteUser = async (req, res) => {
+  const userId = req.user._id;
 
-  const parsedId = parseInt(id);
-
-  if (!parsedId) {
+  if (!userId) {
     return res.status(400).json({
-      message: "Invalid Request - Please provide a correct Id format",
+      message: "Not Authenticated",
     });
   }
 
-  const foundUserIndex = users.findIndex((user) => user.id === parsedId);
+  try {
+    const user = await User.findByIdAndDelete(userId);
 
-  if (foundUserIndex === -1) {
-    return res
-      .status(400)
-      .json({ message: `No user found with the id: ${parsedId}` });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User and associative posts and comments were deleted",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
-
-  users.splice(foundUserIndex, 1);
-
-  return res.status(200).json({
-    message: `User with id ${parsedId} was successfully deleted`,
-  });
 };

@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import { Post } from "./posts.schema.mjs";
+import { Comment } from "./comments.schema.mjs";
 
 const profileSchema = new Schema(
   {
@@ -24,5 +26,26 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Cascade delete function
+userSchema.pre("findByIdAndDelete", async function (next) {
+  const userId = this.getQuery()["_id"];
+
+  // Find all posts by the user
+  const posts = await Post.find({ author: userId });
+
+  // Delete all comments associated with the user's posts
+  for (const post of posts) {
+    await Comment.deleteMany({ post: post._id });
+  }
+
+  // Delete all posts by the user
+  await Post.deleteMany({ author: userId });
+
+  // Optionally, delete all comments made by the user
+  await Comment.deleteMany({ author: userId });
+
+  next();
+});
 
 export const User = mongoose.model("User", userSchema);

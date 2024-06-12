@@ -50,6 +50,6 @@ router.patch("/api/users/:id", patchUser);
 
 // Delete
 // Delete user
-router.delete("/api/users/:id", deleteUser);
+router.delete("/api/users/:id", ensureAuthenticated, deleteUser);
 
 export default router;
