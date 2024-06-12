@@ -1,5 +1,4 @@
 import { matchedData, validationResult } from "express-validator";
-import { users } from "../utils/mockUsers.mjs";
 import { User } from "../schemas/users.schema.mjs";
 import { hashPassword } from "../utils/helpers.mjs";
 
@@ -31,10 +30,10 @@ export const getAllUsers = async (req, res) => {
       users = await User.find();
     }
 
-    return res.status(200).send(users);
+    return res.status(200).json(users);
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -45,17 +44,17 @@ export const getSingleUser = async (req, res) => {
   if (!id) {
     return res
       .status(500)
-      .send({ message: "Invalid Request. No id was provided" });
+      .json({ message: "Invalid Request. No id was provided" });
   }
 
   const reqUser = await User.findById(id).populate("profile");
 
   if (!reqUser) {
     // Send a 404 status if the user is not found
-    res.status(404).send({ message: "Requested user not found" });
+    res.status(404).json({ message: "Requested user not found" });
   } else {
     // Send the found user as a response
-    res.status(200).send(reqUser);
+    res.status(200).json(reqUser);
   }
 };
 
@@ -76,9 +75,10 @@ export const createUser = async (req, res) => {
     ...data,
   });
 
-  return res.status(201).send(newUser);
+  return res.status(201).json(newUser);
 };
 
+// TODO - Update PUT
 // put
 export const putUser = (req, res) => {
   const {
@@ -150,7 +150,7 @@ export const putUserProfile = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while updating the profile" });
+      .send({ error: "An error occurred while updating the profile" });
   }
 };
 
@@ -172,7 +172,7 @@ export const patchUser = (req, res) => {
   const userIndex = users.findIndex((user) => user.id === parsedId);
 
   if (userIndex === -1) {
-    return res.status(404).send({ message: "User not found" });
+    return res.status(404).json({ message: "User not found" });
   }
 
   users[userIndex] = {
@@ -182,7 +182,7 @@ export const patchUser = (req, res) => {
 
   res
     .status(200)
-    .send({ message: "User successfully updated", user: users[userIndex] });
+    .json({ message: "User successfully updated", user: users[userIndex] });
 };
 
 // delete
@@ -194,7 +194,7 @@ export const deleteUser = (req, res) => {
   const parsedId = parseInt(id);
 
   if (!parsedId) {
-    return res.status(400).send({
+    return res.status(400).json({
       message: "Invalid Request - Please provide a correct Id format",
     });
   }
@@ -204,12 +204,12 @@ export const deleteUser = (req, res) => {
   if (foundUserIndex === -1) {
     return res
       .status(400)
-      .send({ message: `No user found with the id: ${parsedId}` });
+      .json({ message: `No user found with the id: ${parsedId}` });
   }
 
   users.splice(foundUserIndex, 1);
 
-  return res.status(200).send({
+  return res.status(200).json({
     message: `User with id ${parsedId} was successfully deleted`,
   });
 };

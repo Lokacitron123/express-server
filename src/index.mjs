@@ -16,6 +16,8 @@ import { connectDB } from "./configs/dbConnection.mjs";
 import usersRouter from "./routes/users.route.mjs";
 import blogsRouter from "./routes/blogs.route.mjs";
 import authRouter from "./routes/auth.route.mjs";
+import tagsRouter from "./routes/tags.route.mjs";
+import commentsRouter from "./routes/comments.route.mjs";
 
 const PORT = process.env.PORT || 3000;
 
@@ -44,6 +46,8 @@ app.use(passport.session());
 app.use(authRouter);
 app.use(usersRouter);
 app.use(blogsRouter);
+app.use(tagsRouter);
+app.use(commentsRouter);
 
 mongoose.connection.once("open", () => {
   app.listen(PORT, () => {

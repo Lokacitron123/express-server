@@ -1,5 +1,6 @@
 import { body, query } from "express-validator";
 
+// This is how we can do validation if chained instead of passing a validation schema to checkSchema function
 export const createUserValidation = [
   body("username")
     .notEmpty()
