@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createBlog,
+  deletePostById,
   editBlog,
   editBlogContent,
   getBlogs,
@@ -37,5 +38,7 @@ router.patch(
   checkSchema(editBlogValidationSchema),
   editBlog
 );
+
+router.delete("/api/blogs/post/:id", ensureAuthenticated, deletePostById);
 
 export default router;
