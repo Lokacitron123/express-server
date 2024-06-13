@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 // Starts connection to DB
 connectDB();
 
-const app = express();
+export const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
