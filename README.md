@@ -18,7 +18,7 @@ The goal of this project has been to create a CRUD REST API using Mongoose and t
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/Lokacitron123/express-server.git
    ```
 2. **Navigate to the project directory:**
    ```bash
